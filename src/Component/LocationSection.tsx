@@ -12,7 +12,7 @@ interface LocationSectionProps {
 
 const LocationSection: React.FC<LocationSectionProps> = ({
   className = '',
-  address =  "2nd Floor, 18 Baale Street, off Adebiwale Street, Grammer School B/S, Ojodu",
+  address = "2nd Floor, 18 Baale Street, off Adebiwale Street, Grammer School B/S, Ojodu",
   addressLabel = "Our Church Address",
   buttonText = "Join us",
   onButtonClick,
@@ -22,6 +22,9 @@ const LocationSection: React.FC<LocationSectionProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Helper to check if URL is embed or share
+  const isEmbedUrl = (url: string) => url.includes('embed') || url.includes('pb=');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -50,7 +53,6 @@ const LocationSection: React.FC<LocationSectionProps> = ({
     if (onButtonClick) {
       onButtonClick();
     } else {
-      // Open Google Maps with the address
       const encodedAddress = encodeURIComponent(address);
       window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
     }
@@ -114,16 +116,22 @@ const LocationSection: React.FC<LocationSectionProps> = ({
                     </button>
                   </div>
                   <div className="relative w-full h-[200px] sm:h-[250px] rounded-xl overflow-hidden">
-                    <iframe
-                      src={mapUrl}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="Church Location Map"
-                    />
+                    {isEmbedUrl(mapUrl) ? (
+                      <iframe
+                        src={mapUrl}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Church Location Map"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full bg-gray-100">
+                        <p className="text-gray-600">Please provide a valid embed URL</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
