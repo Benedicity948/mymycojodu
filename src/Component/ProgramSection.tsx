@@ -115,10 +115,10 @@ const ProgramsSection: React.FC<ProgramsSectionProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10 sm:mb-12 md:mb-16">
           <div className="flex flex-col gap-5">
             <h2 className="text-4xl sm:text-5xl lg:text-[60px] font-medium leading-[120%] text-[#1E1E1E] relative inline-block">
-              Our Programs
+              Youth Church Programs in Ojodu
             </h2>
             <p className="text-xl sm:text-2xl lg:text-[32px] font-medium leading-[120%] text-[#1E1E1E] opacity-80">
-              Lorem ipsum dolor sit amet consectetur. Integer viverra diam mi pellentesque tincidunt eget sed cras.
+              Discover weekly worship, Bible study, prayer meetings, and spiritual growth programs designed to strengthen faith and build a strong Christian community.
             </p>
           </div>
         </div>
@@ -129,7 +129,7 @@ const ProgramsSection: React.FC<ProgramsSectionProps> = ({
           <div className="lg:flex-1">
             <ProgramCard
               title="Sundays"
-              subtitle="Sunday Worship | 7:30AM"
+              subtitle="Sunday Worship Service | 7:30AM"
               imageUrl={program1}
               className="w-full h-[350px] sm:h-[400px] md:h-[500px] lg:h-[710px]"
               delay={0}
@@ -141,7 +141,7 @@ const ProgramsSection: React.FC<ProgramsSectionProps> = ({
             {/* Tuesdays Card */}
             <ProgramCard
               title="Tuesdays"
-              subtitle="Bible Study | 6PM"
+              subtitle="Bible Study & Prayer | 6:00PM"
               imageUrl={program2}
               className="w-full h-[250px] sm:h-[300px] md:h-[340px] lg:h-[349px]"
               delay={200}

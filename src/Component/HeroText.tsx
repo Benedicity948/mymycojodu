@@ -10,9 +10,9 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
-  title = "Surely the lord is in this place ",
-  subtitle = "A place of faith, hope, and love where lives are transformed and purpose is discovered.",
-  subtitle2 ="MFM OJODU YC",
+  title = "Welcome to MFM Youth Church Ojodu",
+  subtitle = "A spirit-filled youth church in Ojodu where prayer, holiness, worship, and purpose come alive for every young person.",
+  subtitle2 ="Mountain of Fire and Miracles Ministries Youth Church",
   showDecorations = true,
   backgroundColor = "transparent",
   backgroundImage = "https://mfmstorage.blob.core.windows.net/mfmwebsite/images/MFM.jpg"

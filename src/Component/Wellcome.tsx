@@ -10,8 +10,8 @@ interface WelcomeSectionProps {
 
 const WelcomeSection: React.FC<WelcomeSectionProps> = ({
   className = '',
-  title = "Everybody is welcome",
-  description = "Here, we believe church is a home, No matter your story, background, or where you are in your faith journey, you have a place here. We're a community learning to love God and love people together.",
+  title = "Everybody is welcome at MFM Youth Church Ojodu",
+  description = "We are a vibrant, prayerful, and purpose-driven youth church in Ojodu, committed to helping young people grow in faith, holiness, and spiritual maturity through worship, prayer, and community.",
   imageUrl = image,
   imageAlt = "Welcome to our church community"
 }) => {
