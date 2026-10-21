@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, type FormEvent } from 'react'
 import pastor from '../assets/Images/sp3.webp'
 
 // Updated data — added `date` field
@@ -11,15 +11,17 @@ const galleryImages = [
   { id: 6, src: pastor, title: 'Community Outreach',   event: 'Feeding Program',      category: 'Event',     date: '2024-07-09' },
 ]
 
+type GalleryImage = (typeof galleryImages)[number]
+
 // 🔐 In production: move this check to your backend
 const VALID_CODES = ['CHURCH2024', 'GALLERY01', 'BLESSED99']
 
 function GalleryGrid() {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null)
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
-  const [downloadedIds, setDownloadedIds] = useState([])
+  const [downloadedIds, setDownloadedIds] = useState<number[]>([])
 
   // 🔍 Search state
   const [searchTerm, setSearchTerm] = useState('')
@@ -65,14 +67,14 @@ function GalleryGrid() {
 
     // Sort by date
     result = [...result].sort((a, b) => {
-      const diff = new Date(b.date) - new Date(a.date)
+      const diff = new Date(b.date).getTime() - new Date(a.date).getTime()
       return sortBy === 'newest' ? diff : -diff
     })
 
     return result
   }, [searchTerm, activeCategory, sortBy])
 
-  const openDownloadModal = (image) => {
+  const openDownloadModal = (image: GalleryImage) => {
     setSelectedImage(image)
     setCode('')
     setError('')
@@ -84,8 +86,11 @@ function GalleryGrid() {
     setError('')
   }
 
-  const handleDownload = async (e) => {
+  const handleDownload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const image = selectedImage
+    if (!image) return
+
     setError('')
     setIsVerifying(true)
 
@@ -98,13 +103,13 @@ function GalleryGrid() {
     }
 
     const link = document.createElement('a')
-    link.href = selectedImage.src
-    link.download = `${selectedImage.title.replace(/\s+/g, '-').toLowerCase()}.webp`
+    link.href = image.src
+    link.download = `${image.title.replace(/\s+/g, '-').toLowerCase()}.webp`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
 
-    setDownloadedIds((prev) => [...prev, selectedImage.id])
+    setDownloadedIds((prev) => [...prev, image.id])
     setIsVerifying(false)
     closeModal()
   }
