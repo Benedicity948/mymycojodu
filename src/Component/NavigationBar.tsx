@@ -20,7 +20,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
   navItems = [
     { label: "Our Programs", href: "/#program" },
     { label: "Giving", href: "/#giving-page " },
-    { label: "Gallery", href: "/gallery-page " },
+    { label: "Gallery", href: "/gallery " },
   ],
   joinButtonText = "Join us",
   onJoinClick,

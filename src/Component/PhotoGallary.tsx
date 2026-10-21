@@ -1,58 +1,100 @@
-import { useState, useMemo, type FormEvent } from 'react'
-import pastor from '../assets/Images/sp3.webp'
+import { useState, useMemo, type FormEvent } from "react";
+import pastor from "../assets/Images/sp3.webp";
 
 // Updated data — added `date` field
 const galleryImages = [
-  { id: 1, src: pastor, title: 'Sunday Service',       event: 'Sunday Worship',       category: 'Worship',   date: '2024-03-10' },
-  { id: 2, src: pastor, title: 'Youth Conference',     event: 'Annual Youth Summit',  category: 'Event',     date: '2024-06-22' },
-  { id: 3, src: pastor, title: 'Prayer Night',         event: 'Midweek Prayer',       category: 'Worship',   date: '2024-04-15' },
-  { id: 4, src: pastor, title: 'Baptism Ceremony',     event: 'New Members Baptism',  category: 'Ceremony',  date: '2024-05-05' },
-  { id: 5, src: pastor, title: 'Choir Practice',       event: 'Music Ministry',       category: 'Music',     date: '2024-02-18' },
-  { id: 6, src: pastor, title: 'Community Outreach',   event: 'Feeding Program',      category: 'Event',     date: '2024-07-09' },
-]
+  {
+    id: 1,
+    src: pastor,
+    title: "Sunday Service",
+    event: "Sunday Worship",
+    category: "Worship",
+    date: "2024-03-10",
+  },
+  {
+    id: 2,
+    src: pastor,
+    title: "Youth Conference",
+    event: "Annual Youth Summit",
+    category: "Event",
+    date: "2024-06-22",
+  },
+  {
+    id: 3,
+    src: pastor,
+    title: "Prayer Night",
+    event: "Midweek Prayer",
+    category: "Worship",
+    date: "2024-04-15",
+  },
+  {
+    id: 4,
+    src: pastor,
+    title: "Baptism Ceremony",
+    event: "New Members Baptism",
+    category: "Ceremony",
+    date: "2024-05-05",
+  },
+  {
+    id: 5,
+    src: pastor,
+    title: "Choir Practice",
+    event: "Music Ministry",
+    category: "Music",
+    date: "2024-02-18",
+  },
+  {
+    id: 6,
+    src: pastor,
+    title: "Community Outreach",
+    event: "Feeding Program",
+    category: "Event",
+    date: "2024-07-09",
+  },
+];
 
-type GalleryImage = (typeof galleryImages)[number]
+type GalleryImage = (typeof galleryImages)[number];
 
 // 🔐 In production: move this check to your backend
-const VALID_CODES = ['CHURCH2024', 'GALLERY01', 'BLESSED99']
+const VALID_CODES = ["CHURCH2024", "GALLERY01", "BLESSED99"];
 
 function GalleryGrid() {
-  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null)
-  const [code, setCode] = useState('')
-  const [error, setError] = useState('')
-  const [isVerifying, setIsVerifying] = useState(false)
-  const [downloadedIds, setDownloadedIds] = useState<number[]>([])
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [downloadedIds, setDownloadedIds] = useState<number[]>([]);
 
   // 🔍 Search state
-  const [searchTerm, setSearchTerm] = useState('')
-  const [activeCategory, setActiveCategory] = useState('All')
-  const [sortBy, setSortBy] = useState('newest') // 'newest' | 'oldest'
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("newest"); // 'newest' | 'oldest'
 
   // Derive unique categories for filter chips
   const categories = useMemo(
-    () => ['All', ...new Set(galleryImages.map((img) => img.category))],
-    []
-  )
+    () => ["All", ...new Set(galleryImages.map((img) => img.category))],
+    [],
+  );
 
   // 🎯 Filter + sort logic
   const filteredImages = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase()
+    const term = searchTerm.trim().toLowerCase();
 
     let result = galleryImages.filter((img) => {
       const matchesCategory =
-        activeCategory === 'All' || img.category === activeCategory
+        activeCategory === "All" || img.category === activeCategory;
 
-      if (!matchesCategory) return false
-      if (!term) return true
+      if (!matchesCategory) return false;
+      if (!term) return true;
 
       // Match against title, event, category, AND date (multiple formats)
-      const dateObj = new Date(img.date)
-      const dateLong = dateObj.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }) // e.g. "March 10, 2024"
-      const dateShort = dateObj.toLocaleDateString('en-US') // e.g. "3/10/2024"
+      const dateObj = new Date(img.date);
+      const dateLong = dateObj.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }); // e.g. "March 10, 2024"
+      const dateShort = dateObj.toLocaleDateString("en-US"); // e.g. "3/10/2024"
 
       return (
         img.title.toLowerCase().includes(term) ||
@@ -62,63 +104,63 @@ function GalleryGrid() {
         dateLong.toLowerCase().includes(term) ||
         dateShort.includes(term) ||
         dateObj.getFullYear().toString().includes(term)
-      )
-    })
+      );
+    });
 
     // Sort by date
     result = [...result].sort((a, b) => {
-      const diff = new Date(b.date).getTime() - new Date(a.date).getTime()
-      return sortBy === 'newest' ? diff : -diff
-    })
+      const diff = new Date(b.date).getTime() - new Date(a.date).getTime();
+      return sortBy === "newest" ? diff : -diff;
+    });
 
-    return result
-  }, [searchTerm, activeCategory, sortBy])
+    return result;
+  }, [searchTerm, activeCategory, sortBy]);
 
   const openDownloadModal = (image: GalleryImage) => {
-    setSelectedImage(image)
-    setCode('')
-    setError('')
-  }
+    setSelectedImage(image);
+    setCode("");
+    setError("");
+  };
 
   const closeModal = () => {
-    setSelectedImage(null)
-    setCode('')
-    setError('')
-  }
+    setSelectedImage(null);
+    setCode("");
+    setError("");
+  };
 
   const handleDownload = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const image = selectedImage
-    if (!image) return
+    e.preventDefault();
+    const image = selectedImage;
+    if (!image) return;
 
-    setError('')
-    setIsVerifying(true)
+    setError("");
+    setIsVerifying(true);
 
-    await new Promise((r) => setTimeout(r, 800))
+    await new Promise((r) => setTimeout(r, 800));
 
     if (!VALID_CODES.includes(code.trim().toUpperCase())) {
-      setError('Invalid download code. Please try again.')
-      setIsVerifying(false)
-      return
+      setError("Invalid download code. Please try again.");
+      setIsVerifying(false);
+      return;
     }
 
-    const link = document.createElement('a')
-    link.href = image.src
-    link.download = `${image.title.replace(/\s+/g, '-').toLowerCase()}.webp`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const link = document.createElement("a");
+    link.href = image.src;
+    link.download = `${image.title.replace(/\s+/g, "-").toLowerCase()}.webp`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-    setDownloadedIds((prev) => [...prev, image.id])
-    setIsVerifying(false)
-    closeModal()
-  }
+    setDownloadedIds((prev) => [...prev, image.id]);
+    setIsVerifying(false);
+    closeModal();
+  };
 
   const clearFilters = () => {
-    setSearchTerm('')
-    setActiveCategory('All')
-    setSortBy('newest')
-  }
+    setSearchTerm("");
+    setActiveCategory("All");
+    setSortBy("newest");
+  };
 
   return (
     <section className="w-full max-w-7xl mx-auto px-4 py-16">
@@ -161,7 +203,7 @@ function GalleryGrid() {
             />
             {searchTerm && (
               <button
-                onClick={() => setSearchTerm('')}
+                onClick={() => setSearchTerm("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 text-xl leading-none"
                 aria-label="Clear search"
               >
@@ -189,8 +231,8 @@ function GalleryGrid() {
               onClick={() => setActiveCategory(cat)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors border ${
                 activeCategory === cat
-                  ? 'bg-amber-500 text-gray-900 border-amber-500'
-                  : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+                  ? "bg-amber-500 text-gray-900 border-amber-500"
+                  : "bg-white/10 text-white border-white/20 hover:bg-white/20"
               }`}
             >
               {cat}
@@ -201,16 +243,17 @@ function GalleryGrid() {
         {/* Result count + clear */}
         <div className="flex items-center justify-between text-sm text-white/80">
           <span>
-            Showing <strong className="text-white">{filteredImages.length}</strong>{' '}
-            {filteredImages.length === 1 ? 'photo' : 'photos'}
+            Showing{" "}
+            <strong className="text-white">{filteredImages.length}</strong>{" "}
+            {filteredImages.length === 1 ? "photo" : "photos"}
             {searchTerm && (
               <>
-                {' '}
+                {" "}
                 for "<span className="text-amber-400">{searchTerm}</span>"
               </>
             )}
           </span>
-          {(searchTerm || activeCategory !== 'All') && (
+          {(searchTerm || activeCategory !== "All") && (
             <button
               onClick={clearFilters}
               className="text-amber-400 hover:text-amber-300 underline underline-offset-2"
@@ -271,10 +314,10 @@ function GalleryGrid() {
 
               {/* Date badge (top-right) */}
               <span className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full">
-                {new Date(image.date).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
+                {new Date(image.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
                 })}
               </span>
 
@@ -397,8 +440,8 @@ function GalleryGrid() {
                 disabled={isVerifying}
                 className={`w-full px-4 py-3 rounded-lg border-2 text-sm uppercase tracking-wider focus:outline-none transition-colors ${
                   error
-                    ? 'border-red-400 focus:border-red-500'
-                    : 'border-gray-200 focus:border-amber-500'
+                    ? "border-red-400 focus:border-red-500"
+                    : "border-gray-200 focus:border-amber-500"
                 }`}
               />
 
@@ -450,7 +493,7 @@ function GalleryGrid() {
                     Verifying...
                   </>
                 ) : (
-                  'Verify & Download'
+                  "Verify & Download"
                 )}
               </button>
             </form>
@@ -462,7 +505,7 @@ function GalleryGrid() {
         </div>
       )}
     </section>
-  )
+  );
 }
 
-export default GalleryGrid
+export default GalleryGrid;
