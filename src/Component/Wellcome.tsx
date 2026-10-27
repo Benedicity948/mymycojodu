@@ -49,7 +49,7 @@ const WelcomeSection: React.FC<WelcomeSectionProps> = ({
     <section 
       ref={sectionRef}
       className={`w-full px-4 sm:px-6 md:px-8 lg:px-20 py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden ${className}`}
-      style={{ background: '#FED2F0' }}
+      style={{ background: 'linear-gradient(135deg, #fbeaf5 0%, #f3eafa 54%, #fff7ed 100%)' }}
     >
       {/* Background decorations */}
       <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/20 rounded-full blur-3xl" />
@@ -66,7 +66,7 @@ const WelcomeSection: React.FC<WelcomeSectionProps> = ({
           <div className={`w-full lg:w-[582px] flex-shrink-0 transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
           }`}>
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative rounded-[28px] overflow-hidden shadow-[0_28px_70px_-32px_rgba(58,19,59,0.4)]">
               <img 
                 src={imageUrl}
                 alt={imageAlt}
@@ -121,10 +121,10 @@ const WelcomeSection: React.FC<WelcomeSectionProps> = ({
               }`}>
                 <a href='https://wa.me/2347072926162'  className="
                   px-8 sm:px-10 md:px-12 py-3 sm:py-4 
-                  bg-[#CB3398] text-white 
+                  bg-gradient-to-r from-[#8d2377] to-[#d33c98] text-white
                   text-base sm:text-lg md:text-xl 
                   font-medium rounded-full
-                  hover:bg-[#b02d84] 
+                  hover:shadow-lg hover:shadow-[#8d2377]/25
                   transition-all duration-300 
                   hover:scale-105 hover:shadow-xl
                   focus:outline-none focus:ring-2 focus:ring-[#CB3398] focus:ring-offset-2

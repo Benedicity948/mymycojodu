@@ -25,7 +25,7 @@ const Footer: React.FC<FooterProps> = ({
 
   return (
     <footer 
-      className={`w-full bg-[#CB3398] px-4 sm:px-6 md:px-8 lg:px-20 py-6 sm:py-8 relative ${className}`}
+      className={`w-full bg-gradient-to-r from-[#321532] via-[#64205f] to-[#9a287d] px-4 sm:px-6 md:px-8 lg:px-20 py-8 sm:py-10 relative ${className}`}
     >
       <div className="max-w-[1440px] mx-auto relative">
         {/* Built by text - positioned to the right */}

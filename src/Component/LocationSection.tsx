@@ -66,7 +66,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({
   return (
     <section 
       ref={sectionRef}
-      className={`w-full px-4 sm:px-6 md:px-8 lg:px-20 py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden ${className}`}
+      className={`w-full bg-gradient-to-br from-[#fff8fc] via-white to-[#f5effa] px-4 sm:px-6 md:px-8 lg:px-20 py-16 sm:py-20 lg:py-24 relative overflow-hidden ${className}`}
     >
       {/* Background decoration */}
       <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#CB3398]/5 rounded-full blur-3xl animate-pulse-slow" />
@@ -77,24 +77,24 @@ const LocationSection: React.FC<LocationSectionProps> = ({
         <div className={`flex flex-col gap-5 mb-10 sm:mb-12 md:mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h2 className="text-4xl sm:text-5xl lg:text-[60px] font-medium leading-[120%] text-[#1E1E1E] relative inline-block">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#a12b83]">Come worship with us</p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-[110%] tracking-[-0.035em] text-[#27152e] relative inline-block">
             Where we are located
-            <span className="absolute -bottom-2 left-0 w-20 h-1 bg-[#CB3398] rounded-full" />
           </h2>
-          <p className="text-xl sm:text-2xl lg:text-[32px] font-medium leading-[120%] text-[#1E1E1E] opacity-80">
-            Lorem ipsum dolor sit amet consectetur. Integer viverra diam mi pellentesque tincidunt eget sed cras.
+          <p className="max-w-2xl text-base sm:text-lg leading-7 text-[#6f6074]">
+            We’d love to welcome you. Find us at our Ojodu location and join us for worship, prayer, and fellowship.
           </p>
         </div>
 
         {/* Location Card */}
-        <div className={`relative rounded-3xl overflow-hidden transition-all duration-1000 delay-300 ${
+        <div className={`relative rounded-[28px] overflow-hidden transition-all duration-1000 delay-300 shadow-[0_28px_80px_-40px_rgba(48,17,51,0.45)] ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
           {/* Background Image with Map Toggle */}
           <div 
-            className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[709px] bg-cover bg-center bg-no-repeat"
+            className="relative w-full h-[380px] sm:h-[460px] md:h-[540px] lg:h-[560px] bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: 'url(/mfm ojodu.png)',
+              backgroundImage: 'radial-gradient(circle at 78% 14%, rgba(239, 105, 189, 0.42), transparent 28%), linear-gradient(135deg, #321532, #74417c 58%, #d64ca1)',
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -149,7 +149,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({
           </div>
 
           {/* Bottom Bar */}
-          <div className="absolute bottom-0 left-0 right-0 bg-[#CB3398] px-4 sm:px-6 py-4 sm:py-5">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-[#5e1b61] via-[#942778] to-[#c53291] px-4 sm:px-6 py-4 sm:py-5">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 max-w-[1212px] mx-auto">
               {/* Address Info */}
               <div className="flex flex-col justify-center gap-1 w-full sm:w-auto">

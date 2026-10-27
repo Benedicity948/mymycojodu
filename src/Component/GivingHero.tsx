@@ -18,41 +18,41 @@ const AccountCard: React.FC<AccountCardProps> = ({
   }
 
   return (
-    <div className="flex flex-col items-center w-full max-w-[560.5px] bg-white rounded-[20px] p-6 sm:p-8 md:p-10 gap-6 md:gap-[41px]">
-      <h2 className="w-full text-center font-medium text-2xl sm:text-3xl md:text-4xl lg:text-[46px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
+    <div className="flex flex-col items-center w-full max-w-[350px] bg-white rounded-[13px] p-[15px] sm:p-5 md:p-[25px] gap-[15px] md:gap-[25px]">
+      <h2 className="w-full text-center font-medium text-[15px] sm:text-[19px] md:text-[23px] lg:text-[29px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
         {title}
       </h2>
       
       <div className="flex flex-col items-center w-full">
-        <p className="w-full text-center font-medium text-base sm:text-lg md:text-[20px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
+        <p className="w-full text-center font-medium text-[10px] sm:text-[11px] md:text-[13px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
           Bank name
         </p>
-        <p className="w-full text-center font-medium text-xl sm:text-2xl md:text-[28px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
+        <p className="w-full text-center font-medium text-[13px] sm:text-[15px] md:text-[18px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
           {bankName}
         </p>
       </div>
 
       <div className="flex flex-col items-center w-full">
-        <p className="w-full text-center font-medium text-base sm:text-lg md:text-[20px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
+        <p className="w-full text-center font-medium text-[10px] sm:text-[11px] md:text-[13px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
           Account name
         </p>
-        <p className="w-full text-center font-medium text-lg sm:text-xl md:text-2xl lg:text-[28px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
+        <p className="w-full text-center font-medium text-[11px] sm:text-[13px] md:text-[15px] lg:text-[18px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
           {accountName}
         </p>
       </div>
 
-      <div className="flex flex-row items-center justify-between p-3 sm:p-4 md:p-[14px_20px] gap-4 sm:gap-6 md:gap-[99px] w-full bg-white border border-dashed border-[#95828E] rounded-[10px]">
-        <span className="flex-1 text-center font-bold text-xl sm:text-2xl md:text-3xl lg:text-[38px] leading-[120%] tracking-[0.15em] text-[#1E1E1E] font-['SF Pro Display']">
+      <div className="flex flex-row items-center justify-between p-2 sm:p-2.5 md:px-[13px] md:py-[9px] gap-2.5 sm:gap-4 md:gap-[60px] w-full bg-white border border-dashed border-[#95828E] rounded-[6px]">
+        <span className="flex-1 text-center font-bold text-[13px] sm:text-[15px] md:text-[19px] lg:text-[24px] leading-[120%] tracking-[0.094em] text-[#1E1E1E] font-['SF Pro Display']">
           {accountNumber}
         </span>
         <button 
-          className="relative w-[37px] h-[39px] flex-shrink-0 hover:opacity-80 transition-opacity"
+          className="relative w-6 h-[25px] flex-shrink-0 hover:opacity-80 transition-opacity"
           onClick={handleCopy}
           aria-label="Copy account number"
         >
-          <div className="absolute w-[37px] h-[39px] left-0 top-0 bg-[#CB3398] rounded-[6px]"></div>
+          <div className="absolute w-6 h-[25px] left-0 top-0 bg-[#CB3398] rounded-[4px]"></div>
           <svg 
-            className="absolute w-6 h-6 left-[7px] top-[7px]" 
+            className="absolute w-[15px] h-[15px] left-1 top-1"
             viewBox="0 0 24 24" 
             fill="none"
           >
@@ -117,20 +117,20 @@ const GivingHero: React.FC = () => {
       <div className="flex flex-col items-center gap-6 md:gap-10 w-full max-w-[1276px]">
         
         {/* Main Giving Section */}
-        <div className="flex flex-col items-center p-6 sm:p-8 md:p-10 gap-6 md:gap-10 w-full max-w-[1241px] bg-[#FEECF8] rounded-[20px]">
+        <div className="flex flex-col items-center p-[15px] sm:p-5 md:p-[25px] gap-[15px] md:gap-[25px] w-full max-w-[775px] bg-[#FEECF8] rounded-[13px]">
           
           {/* Header Section */}
-          <div className="flex flex-col items-center text-center w-full max-w-[1161px]">
-            <h1 className="w-full font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[46px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
+          <div className="flex flex-col items-center text-center w-full max-w-[725px]">
+            <h1 className="w-full font-medium text-[19px] sm:text-[23px] md:text-[30px] lg:text-[29px] leading-[120%] text-[#1E1E1E] font-['SF Pro Display']">
               Our Account Details
             </h1>
-            <p className="w-full max-w-3xl font-normal text-base sm:text-lg md:text-xl lg:text-[24px] leading-[120%] text-[#323745] mt-2 font-['SF Pro Display']">
+            <p className="w-full max-w-3xl font-normal text-[10px] sm:text-[11px] md:text-[13px] lg:text-[15px] leading-[120%] text-[#323745] mt-[5px] font-['SF Pro Display']">
               Kindly make your transfer using any of the two account details below
             </p>
           </div>
 
           {/* Account Cards Container */}
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-6 md:gap-10 w-full max-w-[1161px]">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 md:gap-[25px] w-full max-w-[725px]">
             <AccountCard
               title="Tithe & Offering Account"
               bankName="EcoBank"

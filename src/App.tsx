@@ -1,4 +1,4 @@
-// import Giving from "./Pages/Giving";
+import InitialLoader from "./Component/InitialLoader";
 import Home from "./Pages/Home";
 import SEO from "./Component/SEO";
 
@@ -9,6 +9,7 @@ function App() {
   return (
     <>
       <SEO />
+      <InitialLoader />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/gallery-page" element={<Gallery />} />

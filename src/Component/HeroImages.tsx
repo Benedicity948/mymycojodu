@@ -141,13 +141,25 @@ const GallerySection: React.FC<GallerySectionProps> = ({
 
   return (
     <section 
-      className={`w-full px-4 sm:px-6 md:px-8 lg:px-20 py-4 sm:py-12 md:py-16 lg:py-20 relative overflow-hidden ${className}`}
+      className={`relative w-full overflow-hidden bg-gradient-to-br from-[#fff8fc] via-white to-[#f5effa] px-4 py-14 sm:px-6 sm:py-16 md:px-8 lg:px-20 lg:py-20 ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-     
+      <div className="mx-auto mb-8 max-w-[1276px] sm:mb-10">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#a12b83]">Life at MFM Ojodu YC</p>
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="text-3xl font-semibold tracking-[-0.035em] text-[#27152e] sm:text-4xl lg:text-5xl">Moments together</h2>
+          <a href="/gallery-page" className="text-sm font-semibold text-[#a12b83] transition hover:text-[#6f1d63]">
+            Explore the gallery <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <p className="mt-3 max-w-2xl text-base leading-7 text-[#6f6074] sm:text-lg">
+          Worship, friendship, and serving our community—there’s a place for you here.
+        </p>
+      </div>
+
       {/* Gallery Container */}
-      <div className="relative">
+      <div className="relative mx-auto max-w-[1276px]">
         {/* Cards Container */}
         <div 
           ref={scrollContainerRef}
@@ -157,7 +169,7 @@ const GallerySection: React.FC<GallerySectionProps> = ({
           {displayCards.map((card, index) => (
             <div
               key={`${card.id}`}
-              className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[327px] h-[380px] sm:h-[400px] md:h-[451px] rounded-[10px] border border-[#95828E] overflow-hidden relative group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[327px] h-[360px] sm:h-[400px] md:h-[430px] rounded-[24px] border border-[#f0e0ef] overflow-hidden relative group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
               onClick={() => handleCardClick(index % totalCards)}
               style={{
                 backgroundImage: `url(${card.imageUrl})`,
@@ -167,10 +179,10 @@ const GallerySection: React.FC<GallerySectionProps> = ({
               }}
             >
               {/* Overlay with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#211126]/85 via-[#211126]/10 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
               
               {/* Card Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6 transition-transform duration-300">
                 <h3 className="text-white text-lg sm:text-xl md:text-2xl font-medium mb-1">
                   {card.title || `Image ${card.id}`}
                 </h3>
@@ -190,7 +202,7 @@ const GallerySection: React.FC<GallerySectionProps> = ({
         {/* Navigation Arrows */}
         <button
           onClick={handlePrev}
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#1E1E1E] w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#CB3398] backdrop-blur-sm z-10"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#4a2050] w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#CB3398] backdrop-blur-sm z-10"
           aria-label="Previous slide"
         >
           <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,7 +212,7 @@ const GallerySection: React.FC<GallerySectionProps> = ({
 
         <button
           onClick={handleNext}
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#1E1E1E] w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#CB3398] backdrop-blur-sm z-10"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#4a2050] w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#CB3398] backdrop-blur-sm z-10"
           aria-label="Next slide"
         >
           <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

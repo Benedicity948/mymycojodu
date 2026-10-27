@@ -12,8 +12,10 @@ import Giving from "./Giving";
 function Home() {
   return (
     <>
-      <NavigationBar />
-      <HeroSection />
+      <div id="home-hero">
+        <NavigationBar transparentOnHero />
+        <HeroSection />
+      </div>
       <GallerySection />
       <ProgramsSection />
       <LocationSection />

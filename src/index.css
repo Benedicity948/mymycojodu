@@ -1,1 +1,58 @@
 @import "tailwindcss";
+
+:root {
+  font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-display: "DM Serif Display", Georgia, serif;
+  color: #24152c;
+  background: #fffafe;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 12% 14%, rgb(245 218 239 / 38%), transparent 35%),
+    radial-gradient(ellipse at 88% 40%, rgb(226 216 244 / 34%), transparent 38%),
+    linear-gradient(145deg, #fffafe 0%, #fff8fc 48%, #f8f4fc 100%);
+  background-attachment: fixed;
+  color: #24152c;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+::selection {
+  color: white;
+  background: #8c2376;
+}
+
+:focus-visible {
+  outline: 3px solid #d17bc0;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
