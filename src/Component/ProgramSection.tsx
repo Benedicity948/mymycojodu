@@ -1,85 +1,134 @@
-import React from 'react';
-import program1 from "../assets/Images/program1.webp";
-import program2 from "../assets/Images/program2.jpeg";
-import ImageCard from "./ImageCard";
+import React from "react";
+import culturalSunday from "../assets/Images/culturalSunday.jpeg";
+import hymnSunday from "../assets/Images/hymnsunday.jpeg";
+import loveFeast from "../assets/Images/lovefeast.jpeg";
 
-interface Program {
-  day: string;
+interface Programme {
   title: string;
+  subtitle: string;
+  date: string;
+  dateTime: string;
   time: string;
-  imageUrl: string;
+  image: string;
   imageAlt: string;
+  venue: string;
 }
 
-interface ProgramsSectionProps {
+interface ProgrammesSectionProps {
   className?: string;
 }
 
-const programs: Program[] = [
+const programmes: Programme[] = [
   {
-    day: "Sundays",
-    title: "Sunday Worship Service",
-    time: "7:30 AM",
-    imageUrl: program1,
-    imageAlt: "Youth church members gathered for Sunday worship",
+    title: "Community Hymn Service",
+    subtitle: "A morning of worship through hymns",
+    date: "Sunday, 22 November 2026",
+    dateTime: "2026-11-22",
+    time: "8:00 AM",
+    image: hymnSunday,
+    imageAlt: "Community Hymn Service programme poster",
+    venue: "2nd Floor, 18 Baale Street, off Adebowale Street, Grammar School Bus-Stop, Ojodu, Lagos",
   },
   {
-    day: "Tuesdays",
-    title: "Bible Study & Prayer",
-    time: "6:00 PM",
-    imageUrl: program2,
-    imageAlt: "Youth church members gathered for Bible study and prayer",
+    title: "Cultural Thanksgiving Sunday",
+    subtitle: "Every Tribe, Every Tongue 2026 · Native attire",
+    date: "Sunday, 6 December 2026",
+    dateTime: "2026-12-06",
+    time: "8:00 AM",
+    image: culturalSunday,
+    imageAlt: "Cultural Thanksgiving Sunday programme poster",
+    venue: "2nd Floor, 18 Baale Street, off Adebowale Street, Grammar School Bus-Stop, Ojodu, Lagos",
   },
   {
-    day: "Wednesdays",
-    title: "Manna Water Service",
-    time: "4:30 PM",
-    imageUrl: program1,
-    imageAlt: "Youth church members gathered for a midweek service",
+    title: "Annual Love Feast 2026",
+    subtitle: "Theme: Oneness in Jesus",
+    date: "Sunday, 20 December 2026",
+    dateTime: "2026-12-20",
+    time: "3:00 PM",
+    image: loveFeast,
+    imageAlt: "Annual Love Feast 2026 programme poster",
+    venue: "Church Auditorium",
   },
 ];
 
-const ProgramsSection: React.FC<ProgramsSectionProps> = ({ 
-  className = '',
-}) => {
-  return (
-    <section id='program' className={`relative w-full overflow-hidden bg-gradient-to-br from-[#fff2fa] via-[#fffafe] to-[#f1eafa] px-4 py-16 sm:px-6 sm:py-20 md:px-8 lg:px-20 lg:py-24 ${className}`}>
-      <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-[#CB3398]/10 blur-3xl animate-pulse-slow" />
-      <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-[#8c5ab2]/10 blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+const ProgramSection: React.FC<ProgrammesSectionProps> = ({ className = "" }) => (
+  <section
+    id="program"
+    aria-labelledby="programmes-heading"
+    className={`relative w-full overflow-hidden bg-white px-4 py-16 sm:px-6 sm:py-20 md:px-8 lg:px-20 lg:py-24 ${className}`}
+  >
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 select-none whitespace-nowrap text-[18vw] font-black leading-none tracking-tight text-slate-50"
+    >
+      PROGRAMMES
+    </span>
 
-      <div className="max-w-[1276px] mx-auto relative z-10">
-        {/* Header */}
-        <div className="mb-10 flex flex-col gap-4 sm:mb-12 md:mb-14">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#a12b83]">Grow together</p>
-          <div className="flex flex-col gap-4">
-            <h2 className="max-w-4xl text-3xl font-semibold leading-tight tracking-[-0.035em] text-[#27152e] sm:text-4xl md:text-5xl lg:text-6xl">
-              Youth Church Programs in Ojodu
-            </h2>
-            <p className="max-w-3xl text-base leading-7 text-[#6f6074] sm:text-lg sm:leading-8">
-              Discover weekly worship, Bible study, prayer meetings, and spiritual growth programs designed to strengthen faith and build a strong Christian community.
-            </p>
-          </div>
-        </div>
+    <div className="relative z-10 mx-auto max-w-[1276px]">
+      <header className="mb-10 flex flex-col gap-4 sm:mb-12 md:mb-14">
+        <p className="text-sm font-bold uppercase tracking-[0.12em] text-blue-700">
+          Upcoming programmes
+        </p>
+        <h2
+          id="programmes-heading"
+          className="max-w-3xl font-sans text-3xl font-bold leading-tight tracking-[-0.04em] text-slate-950 sm:text-4xl md:text-5xl"
+        >
+          Special gatherings. Meaningful moments.
+        </h2>
+        <p className="max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+          Mark your calendar for these special times of worship, thanksgiving,
+          and fellowship.
+        </p>
+      </header>
 
-        {/* Programs Grid */}
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {programs.map((program, index) => (
-            <ImageCard
-              key={program.day}
-              badge="Weekly gathering"
-              eyebrow={program.day}
-              title={program.title}
-              description={program.time}
-              imageUrl={program.imageUrl}
-              imageAlt={program.imageAlt}
-              className={`h-[360px] sm:h-[410px] ${index === 2 ? "md:col-span-2 lg:col-span-1" : ""}`}
-              delay={index * 200}
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {programmes.map((programme) => (
+          <article
+            key={programme.dateTime}
+            className="flex min-w-0 overflow-hidden rounded-2xl bg-slate-100"
+          >
+            <div className="relative w-[38%] min-w-[104px] max-w-[220px] shrink-0 self-stretch bg-white">
+              <img
+                src={programme.image}
+                alt={programme.imageAlt}
+                className="absolute inset-0 h-full w-full object-contain"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 p-4 sm:gap-4 sm:p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <time
+                  dateTime={programme.dateTime}
+                  className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 sm:text-sm"
+                >
+                  {programme.date}
+                </time>
+                <time
+                  dateTime={programme.time === "8:00 AM" ? "08:00" : "15:00"}
+                  className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 sm:text-sm"
+                >
+                  {programme.time}
+                </time>
+              </div>
+              <div>
+                <h3 className="font-sans text-lg font-bold leading-snug text-slate-950 sm:text-xl">
+                  {programme.title}
+                </h3>
+                <p className="mt-1 text-sm leading-5 text-slate-600">
+                  {programme.subtitle}
+                </p>
+              </div>
+              <p className="text-sm leading-5 text-slate-700">
+                <span className="font-semibold text-blue-700">Venue: </span>
+                {programme.venue}
+              </p>
+            </div>
+          </article>
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
-export default ProgramsSection;
+export default ProgramSection;
