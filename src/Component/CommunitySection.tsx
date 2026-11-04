@@ -66,14 +66,13 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const section = sectionRef.current;
+    if (section) {
+      observer.observe(section);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
+      observer.disconnect();
     };
   }, []);
 
@@ -87,23 +86,29 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({
         switch(cardId) {
           case 1:
             // Join a Group - scroll to programs section
-            const programsSection = document.getElementById('programs-section');
-            if (programsSection) {
-              programsSection.scrollIntoView({ behavior: 'smooth' });
+            {
+              const programsSection = document.getElementById('program');
+              if (programsSection) {
+                programsSection.scrollIntoView({ behavior: 'smooth' });
+              }
             }
             break;
           case 2:
             // Prayer Request - scroll to contact
-            const contactSection = document.getElementById('contact-section');
-            if (contactSection) {
-              contactSection.scrollIntoView({ behavior: 'smooth' });
+            {
+              const contactSection = document.getElementById('contact-section');
+              if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+              }
             }
             break;
           case 3:
             // Counselling - scroll to contact
-            const counsellingSection = document.getElementById('contact-section');
-            if (counsellingSection) {
-              counsellingSection.scrollIntoView({ behavior: 'smooth' });
+            {
+              const counsellingSection = document.getElementById('contact-section');
+              if (counsellingSection) {
+                counsellingSection.scrollIntoView({ behavior: 'smooth' });
+              }
             }
             break;
           default:

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 interface Testimonial {
   id: number;
@@ -96,15 +96,24 @@ const TestimoniesSection: React.FC<TestimoniesSectionProps> = ({
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const section = sectionRef.current;
+    if (section) {
+      observer.observe(section);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
+      observer.disconnect();
     };
+  }, []);
+
+  const scrollToRow = useCallback((index: number) => {
+    if (scrollContainerRef.current) {
+      const rowHeight = 339 + 20;
+      scrollContainerRef.current.scrollTo({
+        top: index * rowHeight,
+        behavior: 'smooth'
+      });
+    }
   }, []);
 
   // Autoplay functionality
@@ -113,7 +122,6 @@ const TestimoniesSection: React.FC<TestimoniesSectionProps> = ({
       autoplayTimerRef.current = setInterval(() => {
         setActiveIndex((prev) => {
           const next = (prev + 1) % rows.length;
-          scrollToRow(next);
           return next;
         });
       }, autoplaySpeed);
@@ -126,19 +134,12 @@ const TestimoniesSection: React.FC<TestimoniesSectionProps> = ({
     };
   }, [autoplay, isVisible, rows.length, autoplaySpeed]);
 
-  const scrollToRow = (index: number) => {
-    if (scrollContainerRef.current) {
-      const rowHeight = 339 + 20; // height + gap
-      scrollContainerRef.current.scrollTo({
-        top: index * rowHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
+  useEffect(() => {
+    scrollToRow(activeIndex);
+  }, [activeIndex, scrollToRow]);
 
   const handleDotClick = (index: number) => {
     setActiveIndex(index);
-    scrollToRow(index);
     // Reset autoplay timer
     if (autoplayTimerRef.current) {
       clearInterval(autoplayTimerRef.current);

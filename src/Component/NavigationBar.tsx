@@ -19,31 +19,30 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
   logoAlt = "MFM Ojodu Youth Church",
   //   logoSrc = logo,
   navItems = [
-    { label: "Our Programs", href: "/#program" },
-    { label: "Giving", href: "/#giving-page " },
-    { label: "Gallery", href: "/gallery-page " },
+    { label: "Upcoming Programmes", href: "/#program" },
+    { label: "Giving", href: "/#giving-page" },
+    { label: "Gallery", href: "/gallery-page" },
   ],
   joinButtonText = "Join us",
   onJoinClick,
   transparentOnHero = false,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [isHeroHeader, setIsHeroHeader] = useState(transparentOnHero);
+  const [isHeroInView, setIsHeroInView] = useState(transparentOnHero);
+  const isHeroHeader = transparentOnHero && isHeroInView;
 
   useEffect(() => {
     if (!transparentOnHero) {
-      setIsHeroHeader(false);
       return;
     }
 
     const hero = document.getElementById("home-hero");
     if (!hero) {
-      setIsHeroHeader(false);
       return;
     }
 
     const observer = new IntersectionObserver(
-      ([entry]) => setIsHeroHeader(entry.isIntersecting),
+      ([entry]) => setIsHeroInView(entry.isIntersecting),
       { rootMargin: "-84px 0px 0px 0px" },
     );
     observer.observe(hero);

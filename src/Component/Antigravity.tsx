@@ -1,5 +1,3 @@
-// @ts-nocheck - Remove this once @types/three is installed
-/* eslint-disable react/no-unknown-property */
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
@@ -40,6 +38,11 @@ interface Particle {
   randomRadiusOffset: number;
 }
 
+const seededValue = (seed: number): number => {
+  const value = Math.sin(seed * 127.1) * 43758.5453;
+  return value - Math.floor(value);
+};
+
 const AntigravityInner: React.FC<AntigravityProps> = ({
   count = 300,
   magnetRadius = 10,
@@ -71,14 +74,13 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
     const height = viewport.height || 100;
 
     for (let i = 0; i < count; i++) {
-      const t = Math.random() * 100;
-      const speed = 0.01 + Math.random() / 200;
-
-      const x = (Math.random() - 0.5) * width;
-      const y = (Math.random() - 0.5) * height;
-      const z = (Math.random() - 0.5) * 20;
-
-      const randomRadiusOffset = (Math.random() - 0.5) * 2;
+      const seed = i * 6;
+      const t = seededValue(seed + 1) * 100;
+      const speed = 0.01 + seededValue(seed + 2) / 200;
+      const x = (seededValue(seed + 3) - 0.5) * width;
+      const y = (seededValue(seed + 4) - 0.5) * height;
+      const z = (seededValue(seed + 5) - 0.5) * 20;
+      const randomRadiusOffset = (seededValue(seed + 6) - 0.5) * 2;
 
       temp.push({
         t,
@@ -136,9 +138,9 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
     const globalRotation = clock.getElapsedTime() * rotationSpeed;
 
     particles.forEach((particle, i) => {
-      let { t, speed, mx, my, mz, cz, randomRadiusOffset } = particle;
-
-      t = particle.t += speed / 2;
+      const { speed, mx, my, mz, cz, randomRadiusOffset } = particle;
+      particle.t += speed / 2;
+      const t = particle.t;
 
       const projectionFactor = 1 - cz / 50;
       const projectedTargetX = targetX * projectionFactor;
@@ -148,7 +150,7 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
       const dy = my - projectedTargetY;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      let targetPos = { x: mx, y: my, z: mz * depthFactor };
+      const targetPos = { x: mx, y: my, z: mz * depthFactor };
 
       if (dist < magnetRadius) {
         const angle = Math.atan2(dy, dx) + globalRotation;
@@ -194,7 +196,7 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
   });
 
   const getGeometry = () => {
-    switch(particleShape) {
+    switch (particleShape) {
       case 'sphere':
         return <sphereGeometry args={[0.2, 16, 16]} />;
       case 'box':

@@ -69,7 +69,7 @@ const GallerySection: React.FC<GallerySectionProps> = ({
   useEffect(() => {
     if (autoplay && !isHovered) {
       autoplayTimerRef.current = setInterval(() => {
-        handleNext();
+        setCurrentIndex((prev) => (prev + 1) % totalCards);
       }, autoplaySpeed);
     }
 
@@ -78,7 +78,7 @@ const GallerySection: React.FC<GallerySectionProps> = ({
         clearInterval(autoplayTimerRef.current);
       }
     };
-  }, [autoplay, autoplaySpeed, isHovered, currentIndex]);
+  }, [autoplay, autoplaySpeed, isHovered, currentIndex, totalCards]);
 
   // Scroll to current index
   useEffect(() => {
