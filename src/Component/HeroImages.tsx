@@ -149,7 +149,7 @@ const GallerySection: React.FC<GallerySectionProps> = ({
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#a12b83]">Life at MFM Ojodu YC</p>
         <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="text-3xl font-semibold tracking-[-0.035em] text-[#27152e] sm:text-4xl lg:text-5xl">Moments together</h2>
-          <a href="/gallery-page" className="text-sm font-semibold text-[#a12b83] transition hover:text-[#6f1d63]">
+          <a href="/gallery" className="text-sm font-semibold text-[#a12b83] transition hover:text-[#6f1d63]">
             Explore the gallery <span aria-hidden="true">→</span>
           </a>
         </div>
