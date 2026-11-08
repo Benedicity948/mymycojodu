@@ -1,8 +1,23 @@
-import { useState, useMemo, type FormEvent } from "react";
+import { useEffect, useRef, useState, useMemo, type FormEvent } from "react";
 import pastor from "../assets/Images/sp3.webp";
 
-// Updated data — added `date` field
-const galleryImages = [
+interface GalleryImage {
+  id: string | number;
+  src: string;
+  title: string;
+  event: string;
+  category: string;
+  date: string;
+  people: string[];
+  fileName?: string;
+}
+
+interface SelectedUpload {
+  file: File;
+  previewUrl: string;
+}
+
+const initialGalleryImages: GalleryImage[] = [
   {
     id: 1,
     src: pastor,
@@ -10,6 +25,7 @@ const galleryImages = [
     event: "Sunday Worship",
     category: "Worship",
     date: "2024-03-10",
+    people: [],
   },
   {
     id: 2,
@@ -18,6 +34,7 @@ const galleryImages = [
     event: "Annual Youth Summit",
     category: "Event",
     date: "2024-06-22",
+    people: [],
   },
   {
     id: 3,
@@ -26,6 +43,7 @@ const galleryImages = [
     event: "Midweek Prayer",
     category: "Worship",
     date: "2024-04-15",
+    people: [],
   },
   {
     id: 4,
@@ -34,6 +52,7 @@ const galleryImages = [
     event: "New Members Baptism",
     category: "Ceremony",
     date: "2024-05-05",
+    people: [],
   },
   {
     id: 5,
@@ -42,6 +61,7 @@ const galleryImages = [
     event: "Music Ministry",
     category: "Music",
     date: "2024-02-18",
+    people: [],
   },
   {
     id: 6,
@@ -50,31 +70,62 @@ const galleryImages = [
     event: "Feeding Program",
     category: "Event",
     date: "2024-07-09",
+    people: [],
   },
 ];
-
-type GalleryImage = (typeof galleryImages)[number];
 
 // 🔐 In production: move this check to your backend
 const VALID_CODES = ["CHURCH2024", "GALLERY01", "BLESSED99"];
 
 function GalleryGrid() {
+  const [galleryImages, setGalleryImages] = useState(initialGalleryImages);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [downloadedIds, setDownloadedIds] = useState<number[]>([]);
+  const [downloadedIds, setDownloadedIds] = useState<(string | number)[]>([]);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<SelectedUpload[]>([]);
+  const previewUrls = useRef<string[]>([]);
+  const [personNames, setPersonNames] = useState("");
+  const [uploadTitle, setUploadTitle] = useState("");
+  const [uploadEvent, setUploadEvent] = useState("");
+  const [uploadCategory, setUploadCategory] = useState("Event");
+  const [uploadDate, setUploadDate] = useState(
+    () => new Date().toISOString().slice(0, 10),
+  );
+  const [uploadMessage, setUploadMessage] = useState("");
 
   // 🔍 Search state
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest"); // 'newest' | 'oldest'
+  const [galleryView, setGalleryView] = useState<"photos" | "people">("photos");
+  const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
+
+  useEffect(
+    () => () => previewUrls.current.forEach((url) => URL.revokeObjectURL(url)),
+    [],
+  );
 
   // Derive unique categories for filter chips
   const categories = useMemo(
     () => ["All", ...new Set(galleryImages.map((img) => img.category))],
-    [],
+    [galleryImages],
   );
+
+  const people = useMemo(
+    () =>
+      [...new Set(galleryImages.flatMap((image) => image.people))].sort(
+        (a, b) => a.localeCompare(b),
+      ),
+    [galleryImages],
+  );
+
+  const filteredPeople = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    return people.filter((person) => !term || person.toLowerCase().includes(term));
+  }, [people, searchTerm]);
 
   // 🎯 Filter + sort logic
   const filteredImages = useMemo(() => {
@@ -83,8 +134,10 @@ function GalleryGrid() {
     let result = galleryImages.filter((img) => {
       const matchesCategory =
         activeCategory === "All" || img.category === activeCategory;
+      const matchesPerson =
+        !selectedPerson || img.people.includes(selectedPerson);
 
-      if (!matchesCategory) return false;
+      if (!matchesCategory || !matchesPerson) return false;
       if (!term) return true;
 
       // Match against title, event, category, AND date (multiple formats)
@@ -100,6 +153,7 @@ function GalleryGrid() {
         img.title.toLowerCase().includes(term) ||
         img.event.toLowerCase().includes(term) ||
         img.category.toLowerCase().includes(term) ||
+        img.people.some((person) => person.toLowerCase().includes(term)) ||
         img.date.includes(term) ||
         dateLong.toLowerCase().includes(term) ||
         dateShort.includes(term) ||
@@ -114,7 +168,57 @@ function GalleryGrid() {
     });
 
     return result;
-  }, [searchTerm, activeCategory, sortBy]);
+  }, [galleryImages, searchTerm, activeCategory, sortBy, selectedPerson]);
+
+  const resetUploadForm = () => {
+    setSelectedFiles([]);
+    setPersonNames("");
+    setUploadTitle("");
+    setUploadEvent("");
+    setUploadCategory("Event");
+    setUploadDate(new Date().toISOString().slice(0, 10));
+  };
+
+  const handleUpload = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (selectedFiles.length === 0) {
+      setUploadMessage("Choose at least one image to add.");
+      return;
+    }
+
+    const taggedPeople = [
+      ...new Set(
+        personNames
+          .split(",")
+          .map((name) => name.trim())
+          .filter(Boolean),
+      ),
+    ];
+
+    const newImages = selectedFiles.map(({ file, previewUrl }): GalleryImage => ({
+      id: crypto.randomUUID(),
+      src: previewUrl,
+      title:
+        uploadTitle.trim() ||
+        file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "),
+      event: uploadEvent.trim() || "Church Gallery",
+      category: uploadCategory,
+      date: uploadDate,
+      people: taggedPeople,
+      fileName: file.name,
+    }));
+
+    setGalleryImages((current) => [...newImages, ...current]);
+    setGalleryView("photos");
+    setSelectedPerson(null);
+    setSearchTerm("");
+    setActiveCategory("All");
+    setUploadMessage(
+      `${newImages.length} photo${newImages.length === 1 ? "" : "s"} added to this session. Connect the gallery API to save uploads permanently.`,
+    );
+    setShowUploadForm(false);
+    resetUploadForm();
+  };
 
   const openDownloadModal = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -146,7 +250,8 @@ function GalleryGrid() {
 
     const link = document.createElement("a");
     link.href = image.src;
-    link.download = `${image.title.replace(/\s+/g, "-").toLowerCase()}.webp`;
+    const extension = image.fileName?.split(".").pop() || "webp";
+    link.download = `${image.title.replace(/\s+/g, "-").toLowerCase()}.${extension}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -160,6 +265,7 @@ function GalleryGrid() {
     setSearchTerm("");
     setActiveCategory("All");
     setSortBy("newest");
+    setSelectedPerson(null);
   };
 
   return (
@@ -170,10 +276,209 @@ function GalleryGrid() {
           Photo Gallery
         </h2>
         <p className="text-white/90 max-w-xl mx-auto">
-          Browse our cherished moments. To download any photo, you'll need a
-          download code from the media team.
+          Browse church moments or find photos tagged with a specific person.
+          To download any photo, you'll need a download code from the media team.
         </p>
       </div>
+
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex gap-2" aria-label="Gallery view">
+          {(["photos", "people"] as const).map((view) => (
+            <button
+              key={view}
+              onClick={() => {
+                setGalleryView(view);
+                setSelectedPerson(null);
+                setSearchTerm("");
+              }}
+              className={`rounded-full border px-4 py-2 text-sm font-medium capitalize transition-colors ${
+                galleryView === view
+                  ? "border-amber-500 bg-amber-500 text-gray-900"
+                  : "border-white/20 bg-white/10 text-white hover:bg-white/20"
+              }`}
+            >
+              {view === "photos" ? "All photos" : "People"}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => {
+            setUploadMessage("");
+            setShowUploadForm(true);
+          }}
+          className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-gray-900 transition hover:bg-amber-400"
+        >
+          Add photos
+        </button>
+      </div>
+
+      {uploadMessage && (
+        <div
+          role="status"
+          className="mb-6 flex items-start justify-between gap-4 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-amber-100"
+        >
+          <span>{uploadMessage}</span>
+          <button
+            onClick={() => setUploadMessage("")}
+            className="text-lg leading-none text-amber-100/70 hover:text-white"
+            aria-label="Dismiss message"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {showUploadForm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+          onClick={() => setShowUploadForm(false)}
+        >
+          <form
+            onSubmit={handleUpload}
+            onClick={(event) => event.stopPropagation()}
+            className="max-h-[90vh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-2xl bg-white p-6 text-gray-900 shadow-2xl"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-bold">Add photos to the gallery</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Tag people by name to create searchable person albums.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowUploadForm(false)}
+                className="text-2xl leading-none text-gray-400 hover:text-gray-700"
+                aria-label="Close upload form"
+              >
+                ×
+              </button>
+            </div>
+
+            <label className="block text-sm font-medium">
+              Photos
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(event) => {
+                  const uploads = Array.from(event.target.files ?? []).map(
+                    (file) => {
+                      const previewUrl = URL.createObjectURL(file);
+                      previewUrls.current.push(previewUrl);
+                      return { file, previewUrl };
+                    },
+                  );
+                  setSelectedFiles(uploads);
+                  setUploadMessage("");
+                }}
+                className="mt-2 block w-full rounded-lg border border-gray-300 p-3 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2"
+              />
+            </label>
+
+            {selectedFiles.length > 0 && (
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                {selectedFiles.map(({ file, previewUrl }, index) => (
+                  <img
+                    key={`${file.name}-${index}`}
+                    src={previewUrl}
+                    alt={`Selected photo ${index + 1}`}
+                    className="aspect-square w-full rounded-lg object-cover"
+                  />
+                ))}
+              </div>
+            )}
+
+            <label className="block text-sm font-medium">
+              People in these photos
+              <input
+                type="text"
+                value={personNames}
+                onChange={(event) => setPersonNames(event.target.value)}
+                placeholder="Enter names separated by commas"
+                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 font-normal focus:border-amber-500 focus:outline-none"
+              />
+              <span className="mt-1 block text-xs font-normal text-gray-500">
+                Photos will appear in each tagged person’s album.
+              </span>
+            </label>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm font-medium">
+                Title (optional)
+                <input
+                  type="text"
+                  value={uploadTitle}
+                  onChange={(event) => setUploadTitle(event.target.value)}
+                  placeholder="Defaults to each file name"
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 font-normal focus:border-amber-500 focus:outline-none"
+                />
+              </label>
+              <label className="block text-sm font-medium">
+                Event
+                <input
+                  type="text"
+                  value={uploadEvent}
+                  onChange={(event) => setUploadEvent(event.target.value)}
+                  placeholder="e.g. Sunday service"
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 font-normal focus:border-amber-500 focus:outline-none"
+                />
+              </label>
+              <label className="block text-sm font-medium">
+                Category
+                <select
+                  value={uploadCategory}
+                  onChange={(event) => setUploadCategory(event.target.value)}
+                  className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 focus:border-amber-500 focus:outline-none"
+                >
+                  {["Event", "Worship", "Ceremony", "Music", "Community"].map(
+                    (category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ),
+                  )}
+                </select>
+              </label>
+              <label className="block text-sm font-medium">
+                Date
+                <input
+                  type="date"
+                  value={uploadDate}
+                  onChange={(event) => setUploadDate(event.target.value)}
+                  required
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-amber-500 focus:outline-none"
+                />
+              </label>
+            </div>
+
+            <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              Frontend preview only: these photos are kept in this page session
+              and are not uploaded to permanent storage yet.
+            </p>
+            {uploadMessage && (
+              <p role="alert" className="text-sm text-red-600">
+                {uploadMessage}
+              </p>
+            )}
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowUploadForm(false)}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="rounded-lg bg-gray-900 px-5 py-2 text-sm font-semibold text-white hover:bg-amber-500 hover:text-gray-900"
+              >
+                Add to gallery
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* 🔍 Search & Filters Bar */}
       <div className="mb-8 space-y-4">
@@ -198,7 +503,11 @@ function GalleryGrid() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by name, event, or date (e.g. 'Baptism' or '2024-05')"
+              placeholder={
+                galleryView === "people"
+                  ? "Search people by name"
+                  : "Search by person, event, or date"
+              }
               className="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition"
             />
             {searchTerm && (
@@ -264,8 +573,79 @@ function GalleryGrid() {
         </div>
       </div>
 
-      {/* 📸 Grid */}
-      {filteredImages.length === 0 ? (
+      {galleryView === "people" && !selectedPerson ? (
+        filteredPeople.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-white/25 px-6 py-16 text-center">
+            <h3 className="mb-2 text-lg font-semibold text-white">
+              {people.length === 0 ? "No person albums yet" : "No people found"}
+            </h3>
+            <p className="mx-auto max-w-md text-sm text-white/70">
+              {people.length === 0
+                ? "Add photos and tag the people in them. A searchable album will be created for each name."
+                : "Try another name or clear your search."}
+            </p>
+            {people.length === 0 && (
+              <button
+                onClick={() => setShowUploadForm(true)}
+                className="mt-5 rounded-lg bg-amber-500 px-5 py-2 text-sm font-medium text-gray-900 hover:bg-amber-400"
+              >
+                Add tagged photos
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredPeople.map((person) => {
+              const personImages = galleryImages.filter((image) =>
+                image.people.includes(person),
+              );
+              return (
+                <button
+                  key={person}
+                  onClick={() => setSelectedPerson(person)}
+                  className="group overflow-hidden rounded-xl bg-white text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-gray-200">
+                    <img
+                      src={personImages[0].src}
+                      alt={`Photos of ${person}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute bottom-3 right-3 rounded-full bg-black/70 px-3 py-1 text-xs text-white">
+                      {personImages.length}{" "}
+                      {personImages.length === 1 ? "photo" : "photos"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-4">
+                    <h3 className="font-semibold text-gray-900">{person}</h3>
+                    <span className="text-sm text-amber-700">View album →</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )
+      ) : (
+        <>
+          {galleryView === "people" && selectedPerson && (
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <button
+                  onClick={() => setSelectedPerson(null)}
+                  className="mb-2 text-sm text-amber-400 hover:text-amber-300"
+                >
+                  ← All people
+                </button>
+                <h3 className="text-2xl font-bold text-white">{selectedPerson}</h3>
+              </div>
+              <span className="text-sm text-white/70">
+                {filteredImages.length}{" "}
+                {filteredImages.length === 1 ? "photo" : "photos"}
+              </span>
+            </div>
+          )}
+          {filteredImages.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-20 h-20 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-4">
             <svg
@@ -360,6 +740,8 @@ function GalleryGrid() {
             </div>
           ))}
         </div>
+      )}
+        </>
       )}
 
       {/* Download Code Modal — unchanged */}
